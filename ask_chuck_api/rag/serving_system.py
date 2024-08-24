@@ -18,7 +18,6 @@ engine = AlloyDBEngine.from_instance(
     database=DATABASE,
     user=DATABASE_USER,
     password=DATABASE_PASSWORD,
-    iam_account_email="vishal@askchuck.iam.gserviceaccount.com"
 )
 
 embedding = VertexAIEmbeddings(
@@ -34,7 +33,7 @@ model = ChatVertexAI(
 )
 
 
-async def handle_query(query: str) -> str:
+async def handle_query(query: str) -> object:
 
     store = await AlloyDBVectorStore.create(
         engine=engine,
@@ -46,10 +45,15 @@ async def handle_query(query: str) -> str:
         query=query
     )
 
+    citations = []
+
     print(f"\n--- Relevant Documents for ---")
     for i, doc in enumerate(relevant_docs, 1):
         print(f"Document {i}:\n{doc.page_content}\n")
         if doc.metadata:
+            citations.append({
+                "source": doc.metadata.get('source', 'Unknown')
+            })
             print(f"Source: {doc.metadata.get('source', 'Unknown')}\n")
 
     combined_input = (
@@ -76,4 +80,8 @@ async def handle_query(query: str) -> str:
     print("Content only:")
     print(result.content)
     print("citations:")
-    return result.content
+
+    return {
+        "response": result.content,
+        "citations": citations,
+    }

@@ -12,6 +12,4 @@ async def root():
 @app.get("/query")
 async def query(query: str):
     response = await handle_query(query)
-    return {
-        "response": response,
-    }
+    return response
