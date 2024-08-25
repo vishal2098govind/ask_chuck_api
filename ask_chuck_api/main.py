@@ -18,6 +18,6 @@ async def query(query: str):
 
 
 @app.get("/converse")
-async def converse(query: str, session_id: str):
-    response = await handle_conversation(query, session_id)
+async def converse(query: str, session_id: str, user_id: str):
+    response = await handle_conversation(query, session_id, user_id)
     return response

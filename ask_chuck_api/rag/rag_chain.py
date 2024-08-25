@@ -1,3 +1,4 @@
+from typing import Optional
 from langchain.chains.history_aware_retriever import create_history_aware_retriever
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
@@ -8,11 +9,7 @@ from ask_chuck_api.rag.serving_system import get_retriever, model
 from google.cloud.firestore import Client
 
 
-### Statefully manage chat history ###
-store = {}
-
-
-def get_rag_chain():
+def get_rag_chain(rag_chat_history: RagChatMessageHistory):
 
     retriever = get_retriever()
 
@@ -54,11 +51,7 @@ def get_rag_chain():
     )
 
     def get_session_history(session_id: str) -> RagChatMessageHistory:
-        return RagChatMessageHistory(
-            session_id=session_id,
-            user_id="vishal",
-            firestore_client=Client(project="askchuck")
-        )
+        return rag_chat_history
 
     conversational_rag_chain = RunnableWithMessageHistory(
         rag_chain,
