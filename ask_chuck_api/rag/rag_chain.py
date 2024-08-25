@@ -55,9 +55,7 @@ def get_rag_chain():
         return RagChatMessageHistory(
             session_id=session_id,
             user_id="vishal",
-            firestore_client=Client(
-                project="askchuck",
-            )
+            firestore_client=Client(project="askchuck")
         )
 
     conversational_rag_chain = RunnableWithMessageHistory(
