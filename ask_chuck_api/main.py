@@ -1,5 +1,7 @@
 from fastapi import FastAPI
-from ask_chuck_api.rag.serving_system import handle_query
+
+from ask_chuck_api.rag.handle_query import handle_query
+from ask_chuck_api.rag.handle_conversation import handle_conversation
 
 app = FastAPI()
 
@@ -12,4 +14,10 @@ async def root():
 @app.get("/query")
 async def query(query: str):
     response = await handle_query(query)
+    return response
+
+
+@app.get("/converse")
+async def converse(query: str, session_id: str):
+    response = await handle_conversation(query, session_id)
     return response

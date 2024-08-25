@@ -15,6 +15,7 @@ rapidocr-onnxruntime = "^1.3.24"
 langchain = "^0.2.14"
 langchain-google-vertexai = "^1.0.8"
 langchain-google-alloydb-pg = "^0.5.0"
+firebase-admin = "^6.5.0"
 
 [build-system]
 requires = ["poetry-core"]
