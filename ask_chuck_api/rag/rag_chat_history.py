@@ -36,6 +36,7 @@ class RagChatMessageHistory(BaseChatMessageHistory):
     def __init__(
         self,
         session_id: str,
+        conversation_id: str,
         user_id: str,
         firestore_client: Optional[Client] = None,
     ):
@@ -46,12 +47,13 @@ class RagChatMessageHistory(BaseChatMessageHistory):
         :param session_id: The session ID for the chat..
         :param user_id: The user ID for the chat.
         """
-        self.collection_name = "conversations"
-        self.conversation_messages_collection_name = "messages"
+        self.sessions_collection_name = "ask_chuck_sessions"
+        self.conversations_collection_name = "conversations"
         self.session_id = session_id
+        self.conversation_id = conversation_id
         self.user_id = user_id
-        self._document: Optional[DocumentReference] = None
-        self.conversation_messages: Optional[CollectionReference] = None
+        self._session_document: Optional[DocumentReference] = None
+        self._conversations_collection: Optional[CollectionReference] = None
         self.messages: List[BaseMessage] = []
         self.firestore_client = firestore_client or _get_firestore_client()
         self.prepare_firestore()
@@ -61,11 +63,12 @@ class RagChatMessageHistory(BaseChatMessageHistory):
 
         Use this function to make sure your database is ready.
         """
-        self._document = self.firestore_client.collection(
-            self.collection_name
+        self._session_document = self.firestore_client.collection(
+            self.sessions_collection_name
         ).document(self.session_id)
-        self.conversation_messages = self._document.collection(
-            self.conversation_messages_collection_name
+
+        self._conversations_collection = self._session_document.collection(
+            self.conversations_collection_name
         )
         self.load_messages()
 
@@ -76,41 +79,70 @@ class RagChatMessageHistory(BaseChatMessageHistory):
 
     def load_messages(self) -> None:
         """Retrieve the messages from Firestore"""
-        if not self._document:
-            raise ValueError("Document not initialized")
-        if not self.conversation_messages:
-            raise ValueError("Messages collection not initialized")
+        if not self._session_document:
+            raise ValueError("Session document not initialized")
+        if not self._conversations_collection:
+            raise ValueError("Conversations collection not initialized")
 
-        history: List[DocumentSnapshot] = self.conversation_messages.get()
-        history.sort(key=lambda x: x.get('created_at'))
+        history: List[DocumentSnapshot] = self._conversations_collection.get()
+        history.sort(key=lambda x: x.get('updated_at'))
+
+        history_messages = []
+        for h in history:
+            human_message = h.get("human_message")
+            history_messages.append(human_message)
+
+            ai_message = h.get("ai_message")
+            history_messages.append(ai_message)
 
         if len(history) > 0:
-            self.messages = messages_from_dict(
-                [m.get('message') for m in history])
+            self.messages = messages_from_dict(history_messages)
 
     def add_message(self, message: BaseMessage) -> None:
         self.upsert_messages(message)
 
     def upsert_messages(self, new_message: Optional[BaseMessage] = None) -> None:
         """Update the Firestore document."""
-        if not self._document:
+        if not self._session_document:
             raise ValueError("Document not initialized")
 
-        self._document.set({
-            "id": self.session_id,
-            "user_id": self.user_id
-        })
-        print("message content:", new_message.content)
+        doc = self._conversations_collection.document(
+            self.conversation_id).get()
 
-        self.conversation_messages.add(
-            {
-                "message": message_to_dict(new_message),
-                "created_at": datetime.now(),
-            }
+        session_doc = {
+            "id": self.session_id,
+            "user_id": self.user_id,
+        }
+
+        session_doc_snap = self._session_document.get()
+        if not session_doc_snap.exists:
+            session_doc["created_at"] = datetime.now()
+
+        self._session_document.set(session_doc, merge=True)
+        print("message content:", new_message.content)
+        print("message:", new_message)
+
+        conv_doc = {
+            "{type}_message".format(type=new_message.type): message_to_dict(new_message),
+            "updated_at": datetime.now(),
+        }
+
+        if not doc.exists:
+            conv_doc["created_at"] = datetime.now()
+
+        self._conversations_collection.document(self.conversation_id).set(
+            document_data=conv_doc,
+            merge=True
+        )
+
+    def add_context(self, context):
+        self._conversations_collection.document(self.conversation_id).set(
+            document_data={"context": context},
+            merge=True
         )
 
     def clear(self) -> None:
         """Clear session memory from this memory and Firestore."""
         self.messages = []
-        if self._document:
-            self._document.delete()
+        if self._session_document:
+            self._session_document.delete()
