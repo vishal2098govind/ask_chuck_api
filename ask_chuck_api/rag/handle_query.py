@@ -7,9 +7,9 @@ from ask_chuck_api.rag.serving_system import get_vector_store, model
 
 async def handle_query(query: str):
 
-    store = await get_vector_store()
+    store = get_vector_store()
 
-    relevant_docs = await store.asimilarity_search(
+    relevant_docs = store.similarity_search(
         query=query
     )
 

@@ -26,8 +26,8 @@ model = ChatVertexAI(
 )
 
 
-async def get_vector_store():
-    store = await AlloyDBVectorStore.create(
+def get_vector_store():
+    store = AlloyDBVectorStore.create_sync(
         engine=engine,
         table_name=TABLE_NAME,
         embedding_service=embedding,
