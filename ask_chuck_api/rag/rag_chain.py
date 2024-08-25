@@ -49,7 +49,9 @@ def get_rag_chain():
     question_answer_chain = create_stuff_documents_chain(model, qa_prompt)
 
     rag_chain = create_retrieval_chain(
-        history_aware_retriever, question_answer_chain)
+        history_aware_retriever,
+        question_answer_chain
+    )
 
     def get_session_history(session_id: str) -> RagChatMessageHistory:
         return RagChatMessageHistory(

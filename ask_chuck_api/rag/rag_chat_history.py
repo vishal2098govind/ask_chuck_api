@@ -101,6 +101,7 @@ class RagChatMessageHistory(BaseChatMessageHistory):
             "user_id": self.user_id
         })
         print("message content:", new_message.content)
+        print("message:", new_message)
 
         self.conversation_messages.add(
             {

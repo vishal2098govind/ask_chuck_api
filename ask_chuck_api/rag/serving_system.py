@@ -37,14 +37,10 @@ def get_vector_store():
 
 
 def get_retriever():
-    db = AlloyDBVectorStore.create_sync(
-        engine=engine,
-        table_name=TABLE_NAME,
-        embedding_service=embedding,
-    )
+    db = get_vector_store()
     retriever = db.as_retriever(
         search_type="similarity",
-        search_kwargs={"k": 3},
+        search_kwargs={"k": 3, },
     )
     print("db: ", db)
     print("retriever: ", retriever)
