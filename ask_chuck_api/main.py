@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
-from ask_chuck_api.rag import handle_conversation, handle_query
+from ask_chuck_api.rag.handle_query import handle_query
+from ask_chuck_api.rag.handle_conversation import handle_conversation
 
 app = FastAPI()
 

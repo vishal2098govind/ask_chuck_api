@@ -32,13 +32,20 @@ async def get_vector_store():
         table_name=TABLE_NAME,
         embedding_service=embedding,
     )
+    print("store: ", store)
     return store
 
 
-async def get_retriever():
-    db = await get_vector_store()
+def get_retriever():
+    db = AlloyDBVectorStore.create_sync(
+        engine=engine,
+        table_name=TABLE_NAME,
+        embedding_service=embedding,
+    )
     retriever = db.as_retriever(
         search_type="similarity",
         search_kwargs={"k": 3},
     )
+    print("db: ", db)
+    print("retriever: ", retriever)
     return retriever
