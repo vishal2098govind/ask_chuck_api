@@ -3,8 +3,11 @@ import time
 from langchain_google_vertexai import ChatVertexAI, VertexAIEmbeddings
 from langchain_google_alloydb_pg import AlloyDBEngine, AlloyDBVectorStore
 from langchain_pinecone import PineconeVectorStore
-from pinecone import Pinecone, ServerlessSpec
+from pinecone import Pinecone
 from ask_chuck_api.rag.constants import *
+from dotenv import load_dotenv
+
+load_dotenv()
 
 engine = AlloyDBEngine.from_instance(
     project_id=PROJECT_ID,
@@ -40,9 +43,6 @@ def get_alloydb_vector_store():
 
 
 def get_pincone_vector_store():
-    if not os.getenv("PINECONE_API_KEY"):
-        os.environ["PINECONE_API_KEY"] = "405d48bc-0764-4a04-a2a5-32b59635e09e"
-
     pinecone_api_key = os.environ.get("PINECONE_API_KEY")
 
     pc = Pinecone(api_key=pinecone_api_key)
