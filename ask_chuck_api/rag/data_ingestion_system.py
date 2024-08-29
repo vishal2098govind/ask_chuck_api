@@ -5,6 +5,7 @@
 # from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 # from ask_chuck_api.rag.constants import *
+# from ask_chuck_api.rag.serving_system import get_pincone_vector_store
 
 
 # current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -12,17 +13,19 @@
 #                          "Bottom-up-top-down-updown09.pdf")
 
 # loader = PyPDFLoader(
-#     "https://firebasestorage.googleapis.com/v0/b/askchuck.appspot.com/o/Charles%20Owen%2FBottom-up-top-down-updown09.pdf?alt=media&token=c6bd765b-593a-44b2-b389-de64fd8e95ee",
-#     extract_images=True
+#     file_path="https://firebasestorage.googleapis.com/v0/b/askchuck.appspot.com/o/Charles%20Owen%2FContext-for-creativity-Owen_deseng91.pdf?alt=media&token=649a3f47-6417-4be5-9fa8-08a00551f91e",
+#     extract_images=True,
 # )
 
 # docs = loader.load()
 
 # print(docs)
+# for doc in docs:
+#     doc.metadata["title"] = "Charles Owen/Context-for -creativity-Owen_deseng91.pdf"
+#     doc.metadata["content-type"] = "application/pdf"
 
 # text_splitter = RecursiveCharacterTextSplitter(
 #     chunk_size=1000, chunk_overlap=500
-
 # )
 # chunks = text_splitter.split_documents(docs)
 
@@ -51,10 +54,6 @@
 #     model_name="textembedding-gecko@latest", project=PROJECT_ID
 # )
 
-# store = AlloyDBVectorStore.create_sync(
-#     engine=engine,
-#     table_name=TABLE_NAME,
-#     embedding_service=embedding,
-# )
+# store = get_pincone_vector_store()
 
-# # store.add_documents(chunks)
+# store.add_documents(chunks)
