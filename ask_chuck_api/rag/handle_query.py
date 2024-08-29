@@ -2,12 +2,12 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_google_alloydb_pg import AlloyDBVectorStore
 
 from ask_chuck_api.rag.constants import TABLE_NAME
-from ask_chuck_api.rag.serving_system import get_vector_store, model
+from ask_chuck_api.rag.serving_system import get_pincone_vector_store, model
 
 
 async def handle_query(query: str):
 
-    store = get_vector_store()
+    store = get_pincone_vector_store()
 
     relevant_docs = store.similarity_search(
         query=query
