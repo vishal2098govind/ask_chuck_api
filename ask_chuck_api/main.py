@@ -1,11 +1,20 @@
 from fastapi import FastAPI
 from ask_chuck_api.rag.handle_query import handle_query
 from ask_chuck_api.rag.handle_conversation import handle_conversation
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
 load_dotenv()
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/", tags=["root"])

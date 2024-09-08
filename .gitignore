@@ -2,3 +2,4 @@ askchuck-0c12865e76ea.json
 poetry.lock
 **__pycache__
 .env
+*.venv
