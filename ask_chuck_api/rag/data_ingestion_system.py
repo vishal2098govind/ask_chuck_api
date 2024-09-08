@@ -6,14 +6,16 @@
 
 # from ask_chuck_api.rag.constants import *
 # from ask_chuck_api.rag.serving_system import get_pincone_vector_store
+# from dotenv import load_dotenv
 
+# load_dotenv()
 
 # current_dir = os.path.dirname(os.path.abspath(__file__))
 # file_path = os.path.join(current_dir, "Charles-Owen",
 #                          "Bottom-up-top-down-updown09.pdf")
 
 # loader = PyPDFLoader(
-#     file_path="https://firebasestorage.googleapis.com/v0/b/askchuck.appspot.com/o/Charles%20Owen%2FContext-for-creativity-Owen_deseng91.pdf?alt=media&token=649a3f47-6417-4be5-9fa8-08a00551f91e",
+#     file_path="https://firebasestorage.googleapis.com/v0/b/askchuck.appspot.com/o/Charles%20Owen%2FBottom-up-top-down-updown09.pdf?alt=media&token=c6bd765b-593a-44b2-b389-de64fd8e95ee",
 #     extract_images=True,
 # )
 
@@ -21,7 +23,7 @@
 
 # print(docs)
 # for doc in docs:
-#     doc.metadata["title"] = "Charles Owen/Context-for -creativity-Owen_deseng91.pdf"
+#     doc.metadata["title"] = "Charles Owen/Bottom-up, Top-down"
 #     doc.metadata["content-type"] = "application/pdf"
 
 # text_splitter = RecursiveCharacterTextSplitter(

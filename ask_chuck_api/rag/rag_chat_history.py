@@ -117,6 +117,7 @@ class RagChatMessageHistory(BaseChatMessageHistory):
         session_doc_snap = self._session_document.get()
         if not session_doc_snap.exists:
             session_doc["created_at"] = datetime.now()
+            session_doc["session_name"] = new_message.content
 
         self._session_document.set(session_doc, merge=True)
         print("message content:", new_message.content)
