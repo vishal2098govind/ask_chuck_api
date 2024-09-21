@@ -26,7 +26,7 @@ embedding = VertexAIEmbeddings(
 model = ChatVertexAI(
     model="gemini-1.5-flash-001",
     temperature=0,
-    max_tokens=None,
+    max_tokens=8000,
     max_retries=6,
     stop=None,
 )
