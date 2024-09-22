@@ -35,5 +35,6 @@ async def handle_conversation(query: str, session_id: str, user_id: str):
     print(context)
 
     rag_chat_history.add_context(context)
+    result["conversation"] = conversation_id
 
     return result
